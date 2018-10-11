@@ -7,19 +7,11 @@
 ## pip3 install PyGithub
 
 from jira import JIRA
-from github import Github
-from datetime import datetime
-import sys
+from util import hours_between, get_settings
+from github_report import get_pull_request_information
 
 import json
 
-def hours_between(d1, d2):
-    d1 = datetime.strptime(d1, "%Y-%m-%dT%H:%M:%S.%f%z")
-    d2 = datetime.strptime(d2, "%Y-%m-%dT%H:%M:%S.%f%z")
-    return abs((d2 - d1).seconds//3600)
-
-def eprint(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
 
 def getTimeSpentIn(jira, issue, statusToCheck):
     issueExplanded = jira.issue(issue.key, expand='changelog')
@@ -39,46 +31,7 @@ def getTimeSpentIn(jira, issue, statusToCheck):
     else:
         return hours_between(startDate, endDate)
 
-def getPRInfo(issues):
-    g = Github(settings["github_api"])
 
-    loops = len(issues) // 5
-    #print(len(issues), loops, sep=" ")
-
-    try:
-        for i in range(0,loops):
-            min = i * 5
-            if i == loops:
-                max = ""
-            else:
-                max = (i+1) * 5
-            q = "org:sonatype " + " OR ".join(issues[min:max])
-            #print(q, min, max, sep=" ")
-            ghIssues = g.search_issues(query=q)
-            for ghIssue in ghIssues:
-                if ghIssue.pull_request:
-                    pr = ghIssue.as_pull_request()
-                    print(ghIssue.pull_request.html_url, ghIssue.title, ghIssue.user.login, pr.comments, pr.additions, pr.changed_files, sep=", ", end=", ")
-                    reviews = pr.get_reviews()
-                    approved = []
-                    approver_count = 0
-                    commented = []
-                    c_count = 0
-                    for review in reviews:
-                        if review.state == "APPROVED":
-                            approved.append(review.user.login)
-                            approver_count+=1
-                        else:
-                            commented.append(review.user.login)
-                            c_count += 1
-                    print(approver_count, end=",")
-                    print(*approved, sep="|", end=",")
-                    print(*commented, sep="|", end="")
-                    print()
-    except Exception as e:
-        eprint(e)
-        rate_limits = g.get_rate_limit()
-        eprint(rate_limits.core, rate_limits.search, sep=", ")
 
 def main():
     options = { 'server': settings["jira"]["server"] }
@@ -99,12 +52,9 @@ def main():
     print()
     print('---pr info---')
     print("pull request url, summary, created_by, num of comments, num of additions, files_changed, approve count, approvers, commenters")
-    getPRInfo(issueKeys)
+    get_pull_request_information(settings, issueKeys)
 
-
-### run program
-with open('settings.json') as f:
-    settings = json.load(f)
+settings = get_settings()
     
 main()
     
