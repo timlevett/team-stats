@@ -1,5 +1,3 @@
-#!/usr/local/bin/python3
-
 from github import Github
 from util import eprint
 

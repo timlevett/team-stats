@@ -1,5 +1,3 @@
-#!/usr/local/bin/python3
-
 ## https://jira.readthedocs.io/en/latest/
 ## pip3 install jira
 
@@ -7,11 +5,7 @@
 ## pip3 install PyGithub
 
 from jira import JIRA
-from util import hours_between, get_settings
-from github_report import get_pull_request_information
-
-import json
-
+from util import hours_between
 
 def getTimeSpentIn(jira, issue, statusToCheck):
     issueExplanded = jira.issue(issue.key, expand='changelog')
@@ -32,8 +26,7 @@ def getTimeSpentIn(jira, issue, statusToCheck):
         return hours_between(startDate, endDate)
 
 
-
-def main():
+def print_jira_info(settings):
     options = { 'server': settings["jira"]["server"] }
 
     jira = JIRA(options, basic_auth=(settings["jira"]["user"], settings["jira"]["password"]))
@@ -48,13 +41,5 @@ def main():
     for issue in issues:
         print(issue.key, issue.fields.summary,issue.fields.issuetype.name, issue.fields.priority, issue.fields.resolution, issue.fields.reporter, issue.fields.assignee, getTimeSpentIn(jira, issue,'Waiting for Review'),sep=", ")
         issueKeys.append(issue.key)
-
-    print()
-    print('---pr info---')
-    print("pull request url, summary, created_by, num of comments, num of additions, files_changed, approve count, approvers, commenters")
-    get_pull_request_information(settings, issueKeys)
-
-settings = get_settings()
-    
-main()
+    return issueKeys
     
