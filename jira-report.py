@@ -43,7 +43,7 @@ def getPRInfo(issues):
     g = Github(settings["github_api"])
 
     loops = len(issues) // 5
-    print(len(issues), loops, sep=" ")
+    #print(len(issues), loops, sep=" ")
 
     try:
         for i in range(0,loops):
