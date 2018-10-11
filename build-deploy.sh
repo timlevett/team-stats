@@ -6,4 +6,4 @@ pip3 install PyGithub
 mkdir -p reports
 chmod u+x jira-report.py
 
-./run-report.py
+./run-report.py > report.csv
