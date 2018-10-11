@@ -1,9 +1,3 @@
-## https://jira.readthedocs.io/en/latest/
-## pip3 install jira
-
-##https://pygithub.readthedocs.io/en/latest/reference.html
-## pip3 install PyGithub
-
 from jira import JIRA
 from util import hours_between
 
