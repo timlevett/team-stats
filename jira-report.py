@@ -65,11 +65,10 @@ def getPRInfo(issues):
                     commented = []
                     c_count = 0
                     for review in reviews:
-                        #print(review.user.login, review.state, sep="|", end=", ")
                         if review.state == "APPROVED":
                             approved.append(review.user.login)
                             approver_count+=1
-                        elif review.state == "COMMENTED":
+                        else:
                             commented.append(review.user.login)
                             c_count += 1
                     print(approver_count, end=",")
