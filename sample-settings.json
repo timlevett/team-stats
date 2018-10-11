@@ -1,0 +1,9 @@
+{
+    "jira" : {
+        "server": "https://issues.sonatype.org",
+        "user": "",
+        "password": ""
+    },
+    "github_api" : "",
+    "jql": "project = YEP"
+}
