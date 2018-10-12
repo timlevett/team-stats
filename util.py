@@ -5,7 +5,7 @@ import json
 def hours_between(d1, d2):
     d1 = datetime.strptime(d1, "%Y-%m-%dT%H:%M:%S.%f%z")
     d2 = datetime.strptime(d2, "%Y-%m-%dT%H:%M:%S.%f%z")
-    return abs((d2 - d1).seconds//3600)
+    return abs((d2 - d1).total_seconds()/3600)
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)

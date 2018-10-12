@@ -6,7 +6,7 @@ import sys
 
 settings = get_settings()
 options = { 'server': settings["jira"]["server"] }
-jira = JIRA(options, basic_auth=(settings["jira"]["user"], settings["jira"]["password"]))
+jira = JIRA(options, auth=(settings["jira"]["user"], settings["jira"]["password"]))
 
 class TeamReport():
     def __init__(self, team_id):
@@ -60,8 +60,8 @@ print(version, "Laurel", "Alpha", "Axon", "Atom","Total", sep=", ")
 for index, iType in enumerate(issueTypes):
     tot = 0
     pstring = ""
-    for team in teamReports:
-        if team.team_id == 17:
+    for j, team in enumerate(teamReports):
+        if j == 0:
             pstring += iType.issueType + ", "
         tot += team.issues[index]
         pstring += str(team.issues[index]) + ", "
