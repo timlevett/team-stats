@@ -17,5 +17,5 @@ Alternatively you can just run `./build-deploy.sh`
 
 ## References
 
-https://jira.readthedocs.io/en/latest/
-https://pygithub.readthedocs.io/en/latest/reference.html
+* https://jira.readthedocs.io/en/latest/
+* https://pygithub.readthedocs.io/en/latest/reference.html
