@@ -37,9 +37,10 @@ issueTypes = [IssueType(bugJQL, "Bugs"),
                 IssueType(techDebtJQL, "Tech Debt")]
 
 # set version
-if sys.argv[1] is not None:
+if len(sys.argv) > 1:
     version = sys.argv[1]
 else:
+    print("running with default version of Icarus")
     version = 'Icarus'
 teamReports = [TeamReport(17), TeamReport(35), TeamReport(36), TeamReport(38)]
 teams = [17,35,36,38]
