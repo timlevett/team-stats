@@ -5,5 +5,14 @@
         "password": ""
     },
     "github_api" : "",
-    "jql": "project = YEP"
+    "jql": "project = YEP",
+    "github_username": "yourusername",
+    "github_password": "yourgithubaccesstoken",
+    "repositories": [
+        "org/foo-repo1", "org/foo-repo2", "org/foo-repo3"
+    ],
+    "planningPeriods": {
+        "periodName1": "2017-10-26..2017-12-21",
+        "periodName2": "2017-12-22..2018-02-15",
+    }
 }
