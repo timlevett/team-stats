@@ -11,5 +11,5 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 def get_settings():
-    with open('settings.json') as f:
+    with open('../settings.json') as f:
         return json.load(f)
