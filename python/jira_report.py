@@ -58,6 +58,35 @@ def getTimeSpentIn(jira, issue, statusToCheck):
         return hours + hours_between(startDate, endDate)
 
 
+def get_transition_counts_for_issues(jira, issues):
+    transitions = {}
+    for issue in issues:
+        curT = get_transition_counts(jira, issue)
+        for key, value in curT.items():
+            if transitions[key] is None:
+                transitions[key] = value
+            else:
+                transitions[key] += value
+
+    return transitions
+
+def get_transition_counts(jira, issue):
+    issueExplanded = jira.issue(issue.key, expand='changelog')
+    changelog = issueExplanded.changelog
+
+    transitions = {}
+
+    for history in changelog.histories:
+        for item in history.items:
+            if transitions[item.fromString + ":" + item.toString] is None:
+                transitions[item.fromString + ":" + item.toString] = 1
+            else:
+                transitions[item.fromString + ":" + item.toString] = transitions[item.fromString + ":" + item.toString] + 1
+            print('Date:' + history.created + ' From:' + item.fromString + ' To:' + item.toString)
+    
+    return transitions
+
+
 
 
 def print_jira_info(settings):

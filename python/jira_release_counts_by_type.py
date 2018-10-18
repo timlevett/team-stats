@@ -2,29 +2,14 @@
 
 from jira import JIRA
 from util import get_settings
+from models.IssueType import IssueType
+from models.TeamReport import TeamReport
+
 import sys
 
 settings = get_settings()
 options = { 'server': settings["jira"]["server"] }
 jira = JIRA(options, auth=(settings["jira"]["user"], settings["jira"]["password"]))
-
-class TeamReport():
-    def __init__(self, team_id):
-        self.team_id = team_id
-        self.release = ""
-        self.issues = []
-class IssueType():
-    def __init__(self, jql, issueType):
-        self.jql = jql
-        self.issueType = issueType
-
-    def get_scrubbed_jql(self, version, team):
-        return self.jql.replace("[VER]",version).replace("[TEAM]",str(team.team_id))
-    def get_jira_issues(self, jira, version, team):
-        jql = self.get_scrubbed_jql(version, team)
-        issues = jira.search_issues(jql)
-        return issues
-
 
 policyJQL = 'project = CLM AND fixVersion = [VER] AND statusCategory = Done AND type = Bug AND summary ~ "Nexus IQ:" AND Team = [TEAM]'
 bugJQL = 'project = CLM AND fixVersion = [VER] AND statusCategory = Done AND type = Bug AND summary !~ "Nexus IQ:" AND Team = [TEAM]'
