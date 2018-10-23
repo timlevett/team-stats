@@ -4,7 +4,7 @@ from jira import JIRA
 from util import get_settings
 from models.IssueType import IssueType
 from models.TeamReport import TeamReport
-from jira_report import get_numbers_for_time_spend_for_status, get_transition_counts_for_issues
+from jira_utils import get_numbers_for_time_spend_for_status, get_transition_counts_for_issues
 import sys
 
 settings = get_settings()
@@ -31,10 +31,19 @@ else:
 teamReports = [TeamReport(17), TeamReport(35), TeamReport(36), TeamReport(38)]
 teams = [17,35,36,38]
 
+print(version)
+print("team, type, total issues")
+print("transition, count")
+
 # loop over each team
 for team in teamReports:
     team.release = version
     ## collect data
     for issueType in issueTypes:
         issues = issueType.get_jira_issues(jira, version, team)
-        team.issues.append(issues)
+        transitions = get_transition_counts_for_issues(jira, issues)
+        for k in transitions:
+            print(team.team_id, issueType.issueType, len(issues), sep=", ", end=", ")
+            print(k.split(":")[0], k.split(":")[1], sep=", ", end=", ")
+            print(transitions[k], sep=", ")
+

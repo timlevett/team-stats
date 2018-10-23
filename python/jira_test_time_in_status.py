@@ -2,7 +2,7 @@
 
 from jira import JIRA
 from util import get_settings, hours_between
-from jira_report import get_numbers_for_time_spend_for_status, getTimeSpentIn
+from jira_utils import get_numbers_for_time_spend_for_status, getTimeSpentIn
 import sys
 
 settings = get_settings()

@@ -42,7 +42,7 @@ def getTimeSpentIn(jira, issue, statusToCheck):
         for item in history.items:
             if item.field == 'status':
                 if item.toString == statusToCheck:
-                    if startDate is not None:
+                    if startDate is not None and endDate is not None:
                         hours += hours_between(startDate, endDate)
                         endDate = None
                     startDate = history.created
@@ -63,10 +63,10 @@ def get_transition_counts_for_issues(jira, issues):
     for issue in issues:
         curT = get_transition_counts(jira, issue)
         for key, value in curT.items():
-            if transitions[key] is None:
-                transitions[key] = value
+            if key in transitions:
+                transitions[key] = transitions[key] + value
             else:
-                transitions[key] += value
+                transitions[key] = value
 
     return transitions
 
@@ -78,11 +78,18 @@ def get_transition_counts(jira, issue):
 
     for history in changelog.histories:
         for item in history.items:
-            if transitions[item.fromString + ":" + item.toString] is None:
-                transitions[item.fromString + ":" + item.toString] = 1
-            else:
-                transitions[item.fromString + ":" + item.toString] = transitions[item.fromString + ":" + item.toString] + 1
-            print('Date:' + history.created + ' From:' + item.fromString + ' To:' + item.toString)
+            if item.field == 'status':
+                if item.fromString is None:
+                    frm = ""
+                else:
+                    frm = item.fromString
+                key = ":".join([frm , item.toString])
+                #print(key)
+                if  key in transitions:
+                    transitions[key] = transitions[key] + 1
+                else:
+                    transitions[key] = 1
+                #print('Date:' + history.created + ' From:' + item.fromString + ' To:' + item.toString)
     
     return transitions
 

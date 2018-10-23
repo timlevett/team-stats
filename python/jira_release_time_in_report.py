@@ -4,7 +4,8 @@ from jira import JIRA
 from util import get_settings
 from models.IssueType import IssueType
 from models.TeamReport import TeamReport
-from jira_report import get_numbers_for_time_spend_for_status
+from jira_utils import get_numbers_for_time_spend_for_status
+from jira_sql_dao import insert_into_time_in_status
 import sys
 
 settings = get_settings()
@@ -50,26 +51,40 @@ for team in teamReports:
         team.issues.append(issues)
 
 # print header
-print(version + " - " + statusToCheck, "Laurel", "Alpha", "Axon", "Atom", sep=", ")
+#print(version + " - " + statusToCheck, "Laurel", "Alpha", "Axon", "Atom", sep=", ")
 
 # log data
-for index, iType in enumerate(issueTypes):
-    countStr = "- count, "
-    sumStr = "- sum, "
-    maxMinStr = "- max, "
-    avgStr = "- avg, "
-    stdDifStr = "- stdDiff, "
-    medianStr = "- median, "
-    for j, team in enumerate(teamReports):
-        if j == 0:
-            print(iType.issueType)
-        teamIssuesForType = team.issues[index]
-        count, sum, max, min, avg, stdev, median = get_numbers_for_time_spend_for_status(jira, teamIssuesForType, statusToCheck)
-        countStr += str(count) + ", "
-        sumStr += str(sum) + ", "
-        maxMinStr += str(max) + ", "
-        avgStr += str(avg) + ", "
-        medianStr += str(median) + ", "
-        stdDifStr += str(stdev) + ", "
-    #print(countStr, sumStr, maxMinStr, avgStr, medianStr, stdDifStr, sep="\n")
-    print(countStr, medianStr, stdDifStr, sep="\n")
+statuses = [
+    'Groomed'
+    , 'In Development'
+    , 'Raw', 
+    'Ready to Develop'
+    ,'Testing In Progress'
+    ,'To Be Tested'
+    ,'Waiting for Review'
+    ,'Done'
+    ,'On Hold'
+    ,'Open'
+    'Ready to Groom'
+    ,'Create Demo']
+for status in statuses:
+
+    for index, iType in enumerate(issueTypes):
+        countStr = "- count, "
+        sumStr = "- sum, "
+        maxMinStr = "- max, "
+        avgStr = "- avg, "
+        stdDifStr = "- stdDiff, "
+        medianStr = "- median, "
+        for j, team in enumerate(teamReports):
+            teamIssuesForType = team.issues[index]
+            count, sum, max, min, avg, stdev, median = get_numbers_for_time_spend_for_status(jira, teamIssuesForType, status)
+            insert_into_time_in_status(version, iType.issueType, team.team_id, status, count, sum, max, median, stdev)
+            countStr += str(count) + ", "
+            sumStr += str(sum) + ", "
+            maxMinStr += str(max) + ", "
+            avgStr += str(avg) + ", "
+            medianStr += str(median) + ", "
+            stdDifStr += str(stdev) + ", "
+        #print(countStr, sumStr, maxMinStr, avgStr, medianStr, stdDifStr, sep="\n")
+        #print(countStr, medianStr, stdDifStr, sep="\n")

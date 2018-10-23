@@ -7,6 +7,7 @@ This pulls team stats from Jira and github
 ```shell
 pip3 install jira
 pip3 install PyGithub
+pip3 install PyMySQL
 cp sample-settings.json settings.json
 echo "fill out settings.json"
 ```
