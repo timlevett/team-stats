@@ -19,8 +19,8 @@ Alternatively you can just run `./build-deploy.sh`
 ### Docker Setup
 
 * build: `docker build -t py-rt .`
-* run with volume to get latest w/o build: `docker run --rm -v ${pwd}:/program py-rt:latest <script>`
-* example: `docker run --rm -v ${pwd}:/program py-rt:latest ./jira_test_time_in_status.py`
+* run with volume to get latest w/o build: `docker run --rm -v ${pwd}:/program py-rt:latest ./python/<script>`
+* example: `docker run --rm -v ${pwd}:/program py-rt:latest ./python/jira_test_time_in_status.py`
 
 ## References
 
