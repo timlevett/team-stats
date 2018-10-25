@@ -1,3 +1,4 @@
+import datetime
 import pymysql.cursors
 
 from util import get_settings
@@ -32,5 +33,21 @@ def insert_into_time_in_status(version, issueType, team, status_name, count, the
         #     cursor.execute(sql, ('webmaster@python.org',))
         #     result = cursor.fetchone()
         #     print(result)
+    finally:
+        connection.close()
+
+def insert_into_issue_duration_in_status(planning_period, team, issue_id, issue_type, status_list):
+    connection = get_connection()
+    try:
+        with connection.cursor() as cursor:
+            for status in status_list:
+                # 2018-09-25T15:24:31.825+0000'
+                start = datetime.datetime.strptime(status['start'], '%Y-%m-%dT%H:%M:%S.%f%z')
+                end = datetime.datetime.strptime(status['end'], '%Y-%m-%dT%H:%M:%S.%f%z')
+                cursor.execute(
+                    "insert into issue_duration_in_status(planning_period, issue_id, issue_type, status_name, status_start, status_end, status_duration_hours, team) values (%s,%s,%s,%s,%s,%s,%s,%s)",
+                    (planning_period, issue_id, issue_type, status['name'], start, end, status['duration_hours'], team)
+            )
+        connection.commit()
     finally:
         connection.close()

@@ -23,3 +23,15 @@ CREATE TABLE If not exists `transitions` (
   `total_in_category` int(11) NOT NULL,
   PRIMARY KEY (`version`,`team`,`issueType`,`tFrom`,`tTo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table if not exists `issue_duration_in_status` (
+  id int unsigned not null auto_increment primary key,
+  planning_period varchar(30) not null,
+  issue_id varchar(30) not null,
+  issue_type varchar(30) not null,
+  status_name varchar(40) not null,
+  status_start timestamp DEFAULT '1970-01-01 00:00:01' not null,
+  status_end timestamp DEFAULT '1970-01-01 00:00:01' not null,
+  status_duration_hours int not null,
+  team int not null
+);

@@ -57,6 +57,52 @@ def getTimeSpentIn(jira, issue, statusToCheck):
     else:
         return hours + hours_between(startDate, endDate)
 
+def get_time_spend_in(jira, issue, statusToCheck):
+    issueExplanded = jira.issue(issue.key, expand='changelog')
+    changelog = issueExplanded.changelog
+    startDate = None
+    endDate = None
+    hours = 0
+    count = 0
+    for history in changelog.histories:
+        for item in history.items:
+            if item.field == 'status':
+                if item.toString == statusToCheck:
+                    if startDate is not None and endDate is not None:
+                        hours += hours_between(startDate, endDate)
+                        endDate = None
+                        count += 1
+                    startDate = history.created
+                elif item.fromString == statusToCheck:
+                    endDate = history.created
+    if startDate is None or endDate is None:
+        return startDate, endDate, count, hours
+    else:
+        return startDate, endDate, hours + hours_between(startDate, endDate)
+
+def get_statuses_and_time_spent_in(jira, issue):
+    issueExpanded = jira.issue(issue.key, expand='changelog')
+    changelog = issueExpanded.changelog
+    statuses = []
+    current_status = None
+    start_date = None
+    for history in changelog.histories:
+        for item in history.items:
+            if item.field == 'status':
+                if current_status is not None:
+                    # log status change
+                    statusHash = {}
+                    statusHash['name'] = current_status
+                    statusHash['start'] = start_date
+                    statusHash['end'] = history.created
+                    statusHash['duration_hours'] = hours_between(start_date, history.created)
+                    statuses.append(statusHash)
+                
+                current_status = item.toString
+                start_date = history.created
+                
+    return statuses
+
 
 def get_transition_counts_for_issues(jira, issues):
     transitions = {}
