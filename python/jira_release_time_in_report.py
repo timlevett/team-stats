@@ -70,21 +70,7 @@ statuses = [
 for status in statuses:
 
     for index, iType in enumerate(issueTypes):
-        countStr = "- count, "
-        sumStr = "- sum, "
-        maxMinStr = "- max, "
-        avgStr = "- avg, "
-        stdDifStr = "- stdDiff, "
-        medianStr = "- median, "
         for j, team in enumerate(teamReports):
             teamIssuesForType = team.issues[index]
             count, sum, max, min, avg, stdev, median = get_numbers_for_time_spend_for_status(jira, teamIssuesForType, status)
             insert_into_time_in_status(version, iType.issueType, team.team_id, status, count, sum, max, median, stdev)
-            countStr += str(count) + ", "
-            sumStr += str(sum) + ", "
-            maxMinStr += str(max) + ", "
-            avgStr += str(avg) + ", "
-            medianStr += str(median) + ", "
-            stdDifStr += str(stdev) + ", "
-        #print(countStr, sumStr, maxMinStr, avgStr, medianStr, stdDifStr, sep="\n")
-        #print(countStr, medianStr, stdDifStr, sep="\n")
