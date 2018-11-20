@@ -59,3 +59,7 @@ VALUES
 	('Waiting for Review', 'In Progress');
 
 commit;
+
+create table teams
+(team varchar(30) not null primary key,
+ jira_id int not null);
