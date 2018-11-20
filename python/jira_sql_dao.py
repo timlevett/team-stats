@@ -27,12 +27,17 @@ def insert_into_time_in_status(version, issueType, team, status_name, count, the
         # your changes.
         connection.commit()
 
-        # with connection.cursor() as cursor:
-        #     # Read a single record
-        #     sql = "SELECT `id`, `password` FROM `users` WHERE `email`=%s"
-        #     cursor.execute(sql, ('webmaster@python.org',))
-        #     result = cursor.fetchone()
-        #     print(result)
+    finally:
+        connection.close()
+
+def delete_planning_period(planning_period, team):
+    connection = get_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("delete from issue_duration_in_status where planning_period = %s and team = %s", (planning_period, team))
+
+        connection.commit()
+
     finally:
         connection.close()
 
