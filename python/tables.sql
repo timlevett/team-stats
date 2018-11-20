@@ -35,3 +35,31 @@ create table if not exists `issue_duration_in_status` (
   status_duration_hours int not null,
   team int not null
 );
+
+create table status_category
+(
+  status_name varchar(30) not null primary key,
+  tag varchar(30) not null
+);
+
+INSERT INTO `status_category` (`status_name`, `tag`)
+VALUES
+	('Create Demo', 'In Progress'),
+	('Done', 'End'),
+	('Groomed', 'Prework'),
+	('In Development', 'In Progress'),
+	('On Hold', 'In Progress'),
+	('Open', 'Prework'),
+	('Raw', 'Prework'),
+	('Ready to Develop', 'Prework'),
+	('Ready to Groom', 'Prework'),
+	('Refine', 'In Progress'),
+	('Testing In Progress', 'In Progress'),
+	('To Be Tested', 'In Progress'),
+	('Waiting for Review', 'In Progress');
+
+commit;
+
+create table teams
+(team varchar(30) not null primary key,
+ jira_id int not null);

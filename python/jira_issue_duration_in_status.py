@@ -25,12 +25,14 @@ def update_counts_for_period(period, team):
             iType = 'Release'
         insert_into_issue_duration_in_status(period, team, issue.key, iType, get_statuses_and_time_spent_in(jira, issue))
 
-planningPeriods = settings['planningPeriods']
+def main():
+    planningPeriods = settings['planningPeriods']
+    teams = settings['teams']
 
-for team in [17, 18, 35, 36, 38]:
-    for period in planningPeriods:
-        print(f"started planning period {period} and team {team}...")
-        update_counts_for_period(period, team)
-        print(f"completed planning period {period} and team {team}")
+    for team, team_id in teams.items():
+        for period in planningPeriods:
+            print(f"started planning period {period} and team {team}...")
+            update_counts_for_period(period, team_id)
+            print(f"completed planning period {period} and team {team}")
 
-    
+main()
